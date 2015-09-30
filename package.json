@@ -1,21 +1,29 @@
 {
-  "name": "hubot-back-channeling",
-  "version": "0.1.0-SNAPSHOT",
-  "description": "The adapter for back-channeling.",
-  "main": "src/back_channeling.coffee",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "kawasima",
-  "license": "MIT",
-  "dependencies": {
-    "jsedn": "0.3.5",
-    "ws": "0.8.0"
-  },
-  "peerDependencies": {
-    "hubot": ">=2.0"
-  },
-  "devDependencies": {
-    "coffee-script": ">=1.2.0"
-  }
+    "name": "hubot-back-channeling",
+    "version": "0.1.0",
+    "description": "The hubot adapter for back-channeling.",
+    "main": "src/back_channeling.coffee",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": {
+        "name": "kawasima",
+        "email": "kawasima1016@gmail.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/kawasima/hubot-back-channeling.git"
+    },
+    "license": "EPL",
+    "dependencies": {
+        "jsedn": "0.3.5",
+        "ws": "0.8.0"
+    },
+    "peerDependencies": {
+        "hubot": ">=2.0"
+    },
+    "devDependencies": {
+        "coffee-script": ">=1.2.0"
+    },
+    "keywords": ["hubot", "back-channeling"]
 }

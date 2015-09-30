@@ -8,11 +8,7 @@ WebSocket = require('ws')
 class BackChanneling extends Adapter
 
   send: (envelope, strings...) ->
-    @robot.logger.info "Send"
     @bot.comment strings.join('\n')
-
-  reply: (envelope, strings...) ->
-    @robot.logger.info "Reply"
 
   run: ->
     logger = @robot.logger
@@ -27,10 +23,10 @@ class BackChanneling extends Adapter
     @bot = bot
 
     bot.on 'message', (user, body, id) =>
-      return if user.name is @robot.name
+      return if user.name is bot.name
       @robot.receive new TextMessage(user, body, id)
       
-    bot.authenticate code, (token) ->
+    bot.authenticate code, (token) =>
       bot.watch()
       bot.listen token
 
@@ -128,7 +124,9 @@ class BackChannelingStreaming extends EventEmitter
       res.setEncoding "utf8"
       res.on 'data', (chunk) =>
         if res.statusCode == 201
-          @token = JSON.parse(chunk)["access-token"]
+          data = JSON.parse(chunk)
+          @token = data["access-token"]
+          @name = data["name"]
           callback(@token)
         else
           logger.error "Failed to connect. reason: #{chunk}"
