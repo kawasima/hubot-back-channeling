@@ -44,6 +44,6 @@
 
 ## License
 
-Copyright © 2015 kawasima
+Copyright © 2015-2017 kawasima
 
 Distributed under the Eclipse Plublic License Version 1.0.
