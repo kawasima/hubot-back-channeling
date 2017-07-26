@@ -1,6 +1,6 @@
 {
     "name": "hubot-back-channeling",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "The hubot adapter for back-channeling.",
     "main": "src/back_channeling.coffee",
     "scripts": {
