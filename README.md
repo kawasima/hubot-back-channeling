@@ -27,6 +27,12 @@
    ```
    export HUBOT_BACK_CHANNELING_CODE=xxxxxxxxxxx
    export HUBOT_BACK_CHANNELING_THREAD_ID=nnnnnnnnn
+
+   # option
+   export HUBOT_BACK_CHANNELING_HOST=localhost
+   export HUBOT_BACK_CHANNELING_PORT=3009
+   export HUBOT_BACK_CHANNELING_HTTP_SCHEME=http
+   export HUBOT_BACK_CHANNELING_WEBSOCKET_SCHEME=ws
    ```
    `CODE` is an authenticated code. It's published when you created a bot account.
 

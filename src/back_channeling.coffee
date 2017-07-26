@@ -13,19 +13,21 @@ class BackChanneling extends Adapter
   run: ->
     logger = @robot.logger
     code = process.env.HUBOT_BACK_CHANNELING_CODE
-    
+
     options =
       port: process.env.HUBOT_BACK_CHANNELING_PORT or= 3009
       host: process.env.HUBOT_BACK_CHANNELING_HOST or= "localhost"
+      http_scheme: process.env.HUBOT_BACK_CHANNELING_HTTP_SCHEME or= "http"
+      ws_scheme: process.env.HUBOT_BACK_CHANNELING_WEBSOCKET_SCHEME or= "ws"
       thread_id: process.env.HUBOT_BACK_CHANNELING_THREAD_ID
-      
+
     bot = new BackChannelingStreaming options, @robot
     @bot = bot
 
     bot.on 'message', (user, body, id) =>
       return if user.name is bot.name
       @robot.receive new TextMessage(user, body, id)
-      
+
     bot.authenticate code, (token) =>
       bot.watch()
       bot.listen token
@@ -42,12 +44,14 @@ class BackChannelingStreaming extends EventEmitter
     @host = options.host
     @thread_id = options.thread_id
     @port  = options.port
+    @ws_scheme = options.ws_scheme
+    @http_scheme = options.http_scheme
 
   listen:(token) =>
     setupWebSocket = () =>
-      @robot.logger.info "BackChanneling connect... ws://#{@host}:#{@port}/ws/?token=#{token}"
-      ws = new WebSocket "ws://#{@host}:#{@port}/ws/?token=#{token}"
-      
+      @robot.logger.info "BackChanneling connect... #{@ws_scheme}://#{@host}:#{@port}/ws/?token=#{token}"
+      ws = new WebSocket "#{@ws_scheme}://#{@host}:#{@port}/ws/?token=#{token}"
+
       ws.on 'open', () =>
         @robot.logger.info "BackChanneling connected."
 
@@ -66,14 +70,14 @@ class BackChannelingStreaming extends EventEmitter
             user,
             message.at(1).at(EDN.kw(":comment/content")),
             message.at(1).at(EDN.kw(":comment/no"))
-          
+
     setupWebSocket()
 
   comment: (text) ->
     logger = @robot.logger
     @request "POST", "/api/thread/#{@thread_id}/comments", { "comment/content": text }, (data) =>
       logger.info "Posted a comment: #{text}"
-    
+
   watch: () ->
     logger = @robot.logger
     @request "PUT", "/api/thread/#{@thread_id}", { "add-watcher": {} }, (data) =>
@@ -84,6 +88,7 @@ class BackChannelingStreaming extends EventEmitter
     options =
       "host": @host
       "port": @port
+      "protocol": "#{@http_scheme}:"
       "path": path
       "method": method
       "headers":
@@ -108,17 +113,18 @@ class BackChannelingStreaming extends EventEmitter
 
     logger.debug "request #{method} #{path} #{@token}"
     req.end()
-      
+
   authenticate: (code, callback) ->
     logger = @robot.logger
     options =
       "host": @host
       "port": @port
+      "protocol": "#{@http_scheme}:"
       "path": "/api/token"
       "method": "POST"
       "headers":
         "Content-Type": "application/x-www-form-urlencoded"
-        "Accept": "application/json" 
+        "Accept": "application/json"
 
     req = HTTP.request options, (res) =>
       res.setEncoding "utf8"
@@ -133,8 +139,8 @@ class BackChannelingStreaming extends EventEmitter
 
     req.on 'error', (err) ->
       logger.error "Failed to connect. reason: #{err}"
-      
+
     req.write("code=#{code}")
     req.end()
 
-    
+
